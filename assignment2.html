@@ -1,0 +1,363 @@
+<!--Name: Vibha Prahlada 
+    Course Name: Web Programming 1
+    Assignment Number: 2
+    Date of Submission: 10-29-2012	-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<link rel="StyleSheet" type="text/css" href="assignment2.css"/>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script  src="questions.js" type="text/javascript"></script>
+		<script type="text/javascript">	
+		var q=0;          //variable to store the random number
+		var score=0;
+		var count = 0;    //For the timer
+		var ctimer;		  
+		var rand = [];    //An array to validate the random number
+		var counter=0;    //validate the random number
+		
+		function validateChoice() /* This function validates the choice and updates the score */
+		{			
+			hideAnimate();        /* This functions hides the animation after every question*/
+			hideAnimateWrong();
+			var inputs = document.getElementsByName("rd");
+			var x=0;
+			var y=0;
+			if  (geoQuestions[q].questionType == 1)
+			{
+				for (var i = 0; i < inputs.length; i++) /* checks for the selected choice*/
+				{
+					if (inputs[i].checked) 
+					{	
+						y=1;
+						if(geoQuestions[q].choices[i]==geoQuestions[q].correctChoice)
+						{
+							score = score + 5;   /* the score gets updated */
+							document.getElementById("scr").value = score;
+							showAnimate();		
+						}
+						else if(geoQuestions[q].choices[i]!=geoQuestions[q].correctChoice)
+						{
+							showAnimeWrong()
+						}
+						inputs[i].checked = false;
+					}
+							
+				}
+				if(!y) /* Validates when a choice is not selected*/
+				{
+					alert("please select a choice");
+				}
+				else
+				{
+					countDownClear();	/*Clears timer for every question*/ 
+					registerRandom();   /*Displays the Questions, choices and text boxes */
+				}
+					
+			}
+			else if(geoQuestions[q].questionType==2)
+			{
+				var ans = document.getElementById("txt1").value;
+				ans1 = ans.toUpperCase();
+				if (ans=="")
+				{
+					x=1;
+				}
+				else if( ans1 == geoQuestions[q].correctChoice)/*checks if the answer is correct*/
+				{
+					score = score + 5;
+					document.getElementById("scr").value = score;
+					showAnimate();
+				}
+				else if( ans1 != geoQuestions[q].correctChoice)
+					{
+						showAnimeWrong();
+					}
+				document.getElementById("txt1").value="";				
+				if(x)
+				{
+					alert("Please type in an answer");/* validates if nothing is typed in the text box */
+				}
+				else
+				{
+					countDownClear();	/*Clears timer for every question*/ 
+					registerRandom();   /*Displays the Questions, choices and text boxes */
+				}
+			}
+					
+		}
+		
+		function showAnimate() /*This function shows the animation after every question */
+		{
+			document.getElementById("one").style.visibility="visible";
+				animateImage();		
+		}
+		
+		function animateImage() /*Togggles the required text */
+		{
+			$('#one').toggle(5000,hideAnimate);
+		}
+		
+		function hideAnimate() /*This function hides the animation after every question */
+		{
+			document.getElementById("one").style.visibility="hidden";
+		}
+		
+		function showAnimeWrong()/*this function shows the animation when you get a question wrong */
+		{
+			document.getElementById("two").style.visibility="visible";
+			animateImageWrong();	
+			
+		}
+		
+		function animateImageWrong()
+		{
+			$('#two').toggle(5000,hideAnimateWrong);
+		}
+		
+		function hideAnimateWrong()
+		{
+			document.getElementById("two").style.visibility="hidden";
+		}
+		
+		function generateRandomNum() /*This function generates a random number and validates*/
+		{			
+			q= Math.floor((Math.random() *geoQuestions.length));
+			for (i=0;i<11;i++)
+			{
+				if (q == rand[i]) /* checks if the generated random number is equal to any of the array elements*/
+				{
+					generateRandomNum();
+				}
+				
+			}
+			rand.push(q); /*Pushes the generated random number into a separate array*/
+		}
+			
+		function registerRandom() /* This function displays the Questions, choices and text boxes */
+		{
+			counter++;           
+            if(counter==11)
+			{
+				//exitQuiz()
+				completeQuiz();         /*exits the quiz after all the questions are answered*/
+				//finishQuiz(); write a function for this
+			}
+            else
+			{
+				showRight();           /*shows the right elements */
+				countDownStart();      /*starts the timer for every question */
+				showControls();        /* shows the control buttons */
+				generateRandomNum();			
+				if (geoQuestions[q].questionType == 1)
+				{
+                    //var y = document.getElementById("content-left")
+					//y.innerHTML="Hint: "+geoQuestions[q].hint;
+					$("#content-left").html("<h4>Hint: "+"<br/>"+geoQuestions[q].hint+"<h4>");
+					var x=document.getElementById("question");
+                    x.innerHTML=geoQuestions[q].question;       /*displays the question */
+                    hideText();
+                    showRadioChoice();                          /*displays the radio buttons along with the choices */
+                    showRadiobuttons();
+				} 
+				else if(geoQuestions[q].questionType==2)
+				{
+                    $("#content-left").html("<h4>Hint: "+"<br/>"+geoQuestions[q].hint+"<h4>");
+					//var y = document.getElementById("content-left")
+					//y.innerHTML=geoQuestions[q].hint;
+					var x=document.getElementById("question"); 
+                    x.innerHTML=geoQuestions[q].question;
+                    hideChoice();
+                    showText();                                /*displays the text box to type in an answer */
+				}
+			}
+		}
+
+        function showRadiobuttons() /* This function displays the radio buttons sets the values */
+		{
+			document.getElementById("rad1").innerHTML = geoQuestions[q].choices[0];
+			document.getElementById("rad2").innerHTML = geoQuestions[q].choices[1];
+			document.getElementById("rad3").innerHTML = geoQuestions[q].choices[2];
+			document.getElementById("rad4").innerHTML = geoQuestions[q].choices[3];
+			document.getElementById("rad1").value = geoQuestions[q].choices[0];
+			document.getElementById("rad2").value = geoQuestions[q].choices[1];
+			document.getElementById("rad3").value = geoQuestions[q].choices[2];
+			document.getElementById("rad4").value = geoQuestions[q].choices[3];
+			return;
+		}
+		
+		function showControls() /* This function displays the control buttons */
+		{
+			document.getElementById("b2").style.visibility="visible";
+			document.getElementById("b3").style.visibility="visible";
+		}
+			
+		function showRadioChoice()/* This function dispays the choices */
+		{
+			document.getElementById("answer_choice").style.visibility="visible";
+		}
+			
+		function showText()/* This function displays the text box to type in an answer */
+		{
+			document.getElementById("answer_text").style.visibility="visible";
+		}
+		
+		function hideText()/* This function hides the text box when the radio choices are displayed*/
+		{
+			document.getElementById("answer_text").style.visibility="hidden";
+		}
+		
+		function hideChoice()/*This function hides the choices when the text box is displayed*/
+		{
+			document.getElementById("answer_choice").style.visibility="hidden";
+		}
+		
+		function showRight() /* displays the score */
+		{
+			document.getElementById("score").style.visibility="visible";
+		}
+		
+		function exitQuiz() /* This function is called when the exit button is pressed */
+		{
+			var exit= document.getElementById("question");
+			document.getElementById("content-left").style.visibility="hidden";
+			document.getElementById("answer_text").style.visibility="hidden";
+			document.getElementById("answer_choice").style.visibility="hidden";
+			document.getElementById("score").style.visibility="hidden";
+			document.getElementById("timer").style.visibility="hidden";
+			document.getElementById("b2").style.visibility="hidden";
+			document.getElementById("b3").style.visibility="hidden";
+			countDownClear();
+			exit.innerHTML="Sorry to see you go. Please refresh the page to start over again.";
+		}
+		
+		function completeQuiz() /*This function displays the score at the end of the quiz */
+		{
+			var score_exit;
+			document.getElementById("scr").value = score_exit;
+			$("#question").html("<h4>Congratulations!!! You have completed your Quiz! Your score is: "+score+"<h4>");
+			document.getElementById("content-left").style.visibility="hidden";
+			document.getElementById("answer_text").style.visibility="hidden";
+			document.getElementById("answer_choice").style.visibility="hidden";
+			document.getElementById("score").style.visibility="hidden";
+			document.getElementById("timer").style.visibility="hidden";
+			document.getElementById("b2").style.visibility="hidden";
+			document.getElementById("b3").style.visibility="hidden";
+			
+		}
+		
+		function countDownStart() /* this is a timer function */
+		{
+			count = 90;
+			countDownNow();
+		}
+		function countDownNow() /*countdowns the time */
+		{
+			if (count > 0)
+			{
+				--count;
+				$("#timer").html("<h4>Tick Tock: "+count+"<h4>");
+				if(count > 0) 
+				{
+					ctimer=setTimeout(countDownNow, 1000);
+				}
+			}
+			if(count==0) /*If you have not answered a question in the given time frame */
+			{
+				alert("You have ran out of time");
+				registerRandom();
+			}
+		}
+		function countDownClear() /* This function clears the timer for every function */
+		{
+			clearTimeout(ctimer);
+		}
+		
+		function setFocusButton(e)
+		{
+			if(e.keyCode == 13)
+			{
+				alert("inside focus");
+				validateChoice();
+			}
+			
+		}
+		
+	</script>		
+	</head>
+        <body>
+		<div id="container">
+			<div id="header">
+				<div id="headerleft">
+					<svg xmlns="http://www.w3.org/2000/svg" version="1.1"> <!-- Logo Genaration -->
+						<circle cx="30" cy="30" r="25" fill="none" stroke="black" 
+						stroke-width="15" stroke-dasharray="3,5,8,13" />
+						<text x="20" y="37" font-family="Trebuchet" font-size="25" stroke="red" fill="red">M</text> 
+						</svg>
+				</div>				
+				<h2>The MindBenders - Geography</h2>
+				<div id="dt"> 
+					<script type = "text/javascript">                                    <!-- Displays the current date -->
+					/* <![CDATA[ */
+					var currentTime = new Date()
+					var month = currentTime.getMonth() + 1
+					var day = currentTime.getDate()
+					var year = currentTime.getFullYear()
+					document.write("<h3>"+month + "/" + day + "/" + year +"</h3>")				
+					/* ]]> */      
+					</script>
+				</div> 
+			</div>
+			<div id="content-left">
+					<!--<p> This is the left content</p> -->
+			</div>
+			<div id="content-right">                                                     <!-- This div is used to display the score-->
+				<div id="score">
+					<b>SCORE: </b> <input type="text" id="scr"  size="4" />
+				</div>					
+				<div id="timer">					
+				</div>
+			</div>
+			<div id="content">
+				<div id="question">                  <!-- The question is displayed in this div -->
+					<p>Welcome to MindBenders! Please click START to get started!</p>
+					<p>You have 90 seconds to answer each question!</p>
+					<input type="button" id="b1" value="START" onclick="registerRandom();" />
+				</div>
+				<div id="answer_choice">                         <!--Radio buttons and choices are displayed in this div-->
+					<form id="form1" action="">
+					<input type="radio" id="a1" name="rd" onclick="setFocusButton(event)" value="" /><label id="rad1"></label><br/>
+					<input type="radio" id="a2" name="rd" onclick="setFocusButton(event)" value="" /><label id="rad2"></label><br/>
+					<input type="radio" id="a3" name="rd" onclick="setFocusButton(event)" value="" /><label id="rad3"></label><br/>
+					<input type="radio" id="a4" name="rd" onclick="setFocusButton(event)" value="" /><label id="rad4"></label><br/>
+					</form>
+				<div id="answer_text">           <!--The answer text is displayed in this div-->
+					<form id="form2" action="">
+					<h3>Please type in the answer :</h3> <input type="text" id="txt1" onclick="setFocusButton(event)" size="20" />
+					</form>
+				</div>
+				<div id ="controls">
+					<!--<input type="button" id="b4" value="START OVER" onclick="registerRandom();" /> -->
+				</div>
+				</div>
+				<div id="controls1">     <!--This div has the control buttons -->
+					<input type="button" id="b2" value="NEXT" onclick="validateChoice();" onkeypress="validateChoice();" />
+					<input type="button" id="b3" value="EXIT"  style="float:right" onclick="exitQuiz();" />	
+				</div>
+				<div id="one" style="width:350px;height:75px;background-color:Green"> 
+					<h3> You got that Right!Good Going!!</h3>
+				</div>
+				<div id="two"  style="width:600px;height:75px;background-color:Red">
+					<h3>You got that Wrong!!! Let's see how you do this one.</h3>
+				</div>
+			</div>
+			<div id="footer">        <!-- This displays the footer -->
+                <p>
+                Email: vprahlada@scu.edu
+				</p>
+			</div>			
+		</div>				
+        </body>
+</html>
+

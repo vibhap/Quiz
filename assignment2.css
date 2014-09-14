@@ -1,0 +1,74 @@
+/*Name: Vibha Prahlada 
+  Course Name: Web Programming 1
+  Assignment Number: 2
+  Date of Submission: 10-29-2012 */
+  
+#header{ padding:1px;
+         text-align:center;
+		border-bottom:1px solid black;
+		height: 100px;}
+#dt h3{font-size:15px;
+   float:right;
+	}
+#container{width:1250px;
+           margin:auto;
+           border: 2px solid black;
+           background-color:#F0F0F0; 
+           }
+#headerleft    { width:5%;
+         float:left; 
+		 padding:5px;		 
+         margin:5px;
+		 }
+#content{ height:200%;
+          width:60%;
+		  padding: 150px 50px 150px 150px;
+		  margin:auto;
+		  border-left:1px solid black;
+		  border-right:1px solid black;
+		  }
+#content p{text-align:left;}
+
+#content-left{ width:10%;
+			float:left;
+			clear:both;
+			font-size:20px;
+			padding:1em;}
+#content-right {float:right;
+			   width: 10%;
+			   padding:1em;}
+			   
+#scr,h4{ margin-top: 50px;
+	 }
+
+#score{visibility:hidden;}
+#score p{ font-size:16px;}
+
+#footer{
+          clear:both;
+          border-top:1px solid black;
+         }
+#footer p{
+           font-size:15px;
+           text-align:center; 
+          }
+#question{height:50%;
+		 }
+
+/*#controls{ padding-top:150px;}*/
+         
+body{ background-color: Black;}
+#answer_choice{visibility:hidden;}
+#answer_text{visibility:hidden;
+			 position:relative;}
+#controls1{visibility:hidden;}
+#one{
+		visibility:hidden;
+		position:relative;
+	}
+#two{ visibility:hidden;
+		position:relative;}
+#rad1, #rad2, #rad3, #rad4{ font-size: 20px;}
+#question { font-size:20px;}
+#timer { margin-top:1px;}
+#footer p{font-size:20px;}
